@@ -14,4 +14,8 @@ SELECT
     NULL::BIGINT      AS payload_commit_count,
     NULL::VARCHAR     AS payload_action,
     NULL::VARCHAR     AS payload_ref
-WHERE false  -- TODO: read_parquet(... hive_partitioning=true) + DQ-фільтри
+FROM read_parquet('../../data/events/**/*.parquet', hive_partitioning=true)
+WHERE event_type IN ('PushEvent', 'IssuesEvent', 'PullRequestEvent', 'WatchEvent', 'IssueCommentEvent')
+  AND actor_login NOT LIKE '%[bot]'
+  AND (event_type <> 'PushEvent' AND payload_commit_count <> 0)
+--WHERE false  -- TODO: read_parquet(... hive_partitioning=true) + DQ-фільтри
