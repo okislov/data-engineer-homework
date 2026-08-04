@@ -12,18 +12,70 @@ TODO (Завдання 4, 5, 6): реалізуйте три функції ни
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import polars as pl
 
 from . import config
 
 
 def build_repo_activity(silver: pl.DataFrame) -> pl.DataFrame:
-    raise NotImplementedError("Завдання 4: реалізуйте repo_activity згідно з CONTRACTS.md")
+    gold_df = (
+        silver.group_by("repo_name")
+        .agg(
+            pl.len().cast(pl.Int64).alias("event_count"),
+            pl.col("event_type")
+            .n_unique()
+            .cast(pl.Int64)
+            .alias("distinct_event_types"),
+        )
+        .sort("event_count", descending=True)
+    )
+
+    output_path = Path("data/gold/repo_activity.parquet")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    gold_df.write_parquet(output_path)
+
+    return gold_df
 
 
 def build_activity_per_minute(silver: pl.DataFrame) -> pl.DataFrame:
-    raise NotImplementedError("Завдання 5: реалізуйте activity_per_minute згідно з CONTRACTS.md")
+    gold_df = (
+        silver.with_columns(
+            pl.col("created_at")
+            .dt.truncate("1m")
+            .dt.convert_time_zone("UTC")
+            .cast(pl.Datetime("us", "UTC"))
+            .alias("minute")
+        )
+        .group_by("minute")
+        .agg(pl.len().cast(pl.Int64).alias("event_count"))
+        .sort("minute")
+    )
+
+    output_path = Path("data/gold/activity_per_minute.parquet")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    gold_df.write_parquet(output_path)
+
+    return gold_df
 
 
 def build_push_commits_by_repo(silver: pl.DataFrame) -> pl.DataFrame:
-    raise NotImplementedError("Завдання 6: реалізуйте push_commits_by_repo згідно з CONTRACTS.md")
+    gold_df = (
+        silver.filter(pl.col("event_type") == "PushEvent")
+        .group_by("repo_name")
+        .agg(
+            pl.len().cast(pl.Int64).alias("push_events"),
+            pl.col("commit_count").sum().cast(pl.Int64).alias("total_commits"),
+        )
+        .sort("push_events", descending=True)
+    )
+
+    output_path = Path("data/gold/push_commits_by_repo.parquet")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    gold_df.write_parquet(output_path)
+
+    return gold_df
