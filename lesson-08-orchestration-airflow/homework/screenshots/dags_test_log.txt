@@ -1,0 +1,66 @@
+okislov@DESKTOP-P4ORA00:/mnt/d/DataEngineerCourse/UA_DATA-ENGINEERING_KHOROSHYKH-2-hw/lesson-08-orchestration-airflow/homework$ docker compose exec airflow-scheduler \
+> airflow dags test github_archive_daily 2024-01-14
+[2026-08-15T18:05:12.505+0000] {dagbag.py:588} INFO - Filling up the DagBag from /opt/airflow/dags
+[2026-08-15T18:05:12.733+0000] {dag.py:4435} INFO - dagrun id: github_archive_daily
+[2026-08-15T18:05:12.763+0000] {dag.py:4451} INFO - created dagrun <DagRun github_archive_daily @ 2024-01-14 00:00:00+00:00: manual__2024-01-14T00:00:00+00:00, state:running, queued_at: None. externally triggered: False>
+[2026-08-15T18:05:12.826+0000] {dag.py:4396} INFO - [DAG TEST] starting task_id=check_availability map_index=-1
+[2026-08-15T18:05:12.827+0000] {dag.py:4399} INFO - [DAG TEST] running task <TaskInstance: github_archive_daily.check_availability manual__2024-01-14T00:00:00+00:00 [scheduled]>
+[2026-08-15 18:05:13,299] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='airflow' AIRFLOW_CTX_DAG_ID='github_archive_daily' AIRFLOW_CTX_TASK_ID='check_availability' AIRFLOW_CTX_EXECUTION_DATE='2024-01-14T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2024-01-14T00:00:00+00:00'
+[2026-08-15T18:05:13.299+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='airflow' AIRFLOW_CTX_DAG_ID='github_archive_daily' AIRFLOW_CTX_TASK_ID='check_availability' AIRFLOW_CTX_EXECUTION_DATE='2024-01-14T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2024-01-14T00:00:00+00:00'
+[2026-08-15T18:05:13.303+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2026-08-15 18:05:13,312] {gh_sensor.py:34} INFO - If GitHub Archive: https://data.gharchive.org/2024-01-14-14.json.gz
+[2026-08-15T18:05:13.312+0000] {gh_sensor.py:34} INFO - If GitHub Archive: https://data.gharchive.org/2024-01-14-14.json.gz
+[2026-08-15 18:05:14,409] {gh_sensor.py:43} INFO - 200
+[2026-08-15T18:05:14.409+0000] {gh_sensor.py:43} INFO - 200
+[2026-08-15 18:05:14,411] {base.py:339} INFO - Success criteria met. Exiting.
+[2026-08-15T18:05:14.411+0000] {base.py:339} INFO - Success criteria met. Exiting.
+[2026-08-15T18:05:14.426+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2026-08-15T18:05:14.427+0000] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=github_archive_daily, task_id=check_availability, run_id=manual__2024-01-14T00:00:00+00:00, execution_date=20240114T000000, start_date=, end_date=20260815T180514
+[2026-08-15T18:05:14.455+0000] {dag.py:4410} INFO - [DAG TEST] end task task_id=check_availability map_index=-1
+[2026-08-15T18:05:14.501+0000] {dag.py:4396} INFO - [DAG TEST] starting task_id=download_archive_task map_index=-1
+[2026-08-15T18:05:14.502+0000] {dag.py:4399} INFO - [DAG TEST] running task <TaskInstance: github_archive_daily.download_archive_task manual__2024-01-14T00:00:00+00:00 [scheduled]>
+[2026-08-15 18:05:14,551] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='airflow' AIRFLOW_CTX_DAG_ID='github_archive_daily' AIRFLOW_CTX_TASK_ID='download_archive_task' AIRFLOW_CTX_EXECUTION_DATE='2024-01-14T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2024-01-14T00:00:00+00:00'
+[2026-08-15T18:05:14.551+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='airflow' AIRFLOW_CTX_DAG_ID='github_archive_daily' AIRFLOW_CTX_TASK_ID='download_archive_task' AIRFLOW_CTX_EXECUTION_DATE='2024-01-14T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2024-01-14T00:00:00+00:00'
+[2026-08-15T18:05:14.552+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2026-08-15T18:05:14.571+0000] {gh_etl.py:77} INFO - Cache hit, reusing /opt/airflow/data/landing/2024-01-14/github_14.json.gz
+[2026-08-15 18:05:14,571] {python.py:240} INFO - Done. Returned value was: /opt/airflow/data/landing/2024-01-14/github_14.json.gz
+[2026-08-15T18:05:14.571+0000] {python.py:240} INFO - Done. Returned value was: /opt/airflow/data/landing/2024-01-14/github_14.json.gz
+[2026-08-15T18:05:14.590+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2026-08-15T18:05:14.591+0000] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=github_archive_daily, task_id=download_archive_task, run_id=manual__2024-01-14T00:00:00+00:00, execution_date=20240114T000000, start_date=, end_date=20260815T180514
+[2026-08-15T18:05:14.613+0000] {dag.py:4410} INFO - [DAG TEST] end task task_id=download_archive_task map_index=-1
+[2026-08-15T18:05:14.644+0000] {dag.py:4396} INFO - [DAG TEST] starting task_id=validate_file_task map_index=-1
+[2026-08-15T18:05:14.645+0000] {dag.py:4399} INFO - [DAG TEST] running task <TaskInstance: github_archive_daily.validate_file_task manual__2024-01-14T00:00:00+00:00 [scheduled]>
+[2026-08-15 18:05:14,695] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='airflow' AIRFLOW_CTX_DAG_ID='github_archive_daily' AIRFLOW_CTX_TASK_ID='validate_file_task' AIRFLOW_CTX_EXECUTION_DATE='2024-01-14T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2024-01-14T00:00:00+00:00'
+[2026-08-15T18:05:14.695+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='airflow' AIRFLOW_CTX_DAG_ID='github_archive_daily' AIRFLOW_CTX_TASK_ID='validate_file_task' AIRFLOW_CTX_EXECUTION_DATE='2024-01-14T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2024-01-14T00:00:00+00:00'
+[2026-08-15T18:05:14.696+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2026-08-15T18:05:14.721+0000] {gh_etl.py:109} INFO - Validation OK (63.7 MB): /opt/airflow/data/landing/2024-01-14/github_14.json.gz
+[2026-08-15 18:05:14,722] {python.py:240} INFO - Done. Returned value was: /opt/airflow/data/landing/2024-01-14/github_14.json.gz
+[2026-08-15T18:05:14.722+0000] {python.py:240} INFO - Done. Returned value was: /opt/airflow/data/landing/2024-01-14/github_14.json.gz
+[2026-08-15T18:05:14.740+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2026-08-15T18:05:14.742+0000] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=github_archive_daily, task_id=validate_file_task, run_id=manual__2024-01-14T00:00:00+00:00, execution_date=20240114T000000, start_date=, end_date=20260815T180514
+[2026-08-15T18:05:14.764+0000] {dag.py:4410} INFO - [DAG TEST] end task task_id=validate_file_task map_index=-1
+[2026-08-15T18:05:14.796+0000] {dag.py:4396} INFO - [DAG TEST] starting task_id=load_to_duckdb_task map_index=-1
+[2026-08-15T18:05:14.796+0000] {dag.py:4399} INFO - [DAG TEST] running task <TaskInstance: github_archive_daily.load_to_duckdb_task manual__2024-01-14T00:00:00+00:00 [scheduled]>
+[2026-08-15 18:05:14,843] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='airflow' AIRFLOW_CTX_DAG_ID='github_archive_daily' AIRFLOW_CTX_TASK_ID='load_to_duckdb_task' AIRFLOW_CTX_EXECUTION_DATE='2024-01-14T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2024-01-14T00:00:00+00:00'
+[2026-08-15T18:05:14.843+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='airflow' AIRFLOW_CTX_DAG_ID='github_archive_daily' AIRFLOW_CTX_TASK_ID='load_to_duckdb_task' AIRFLOW_CTX_EXECUTION_DATE='2024-01-14T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2024-01-14T00:00:00+00:00'
+[2026-08-15T18:05:14.844+0000] {taskinstance.py:732} INFO - ::endgroup::
+[2026-08-15T18:05:20.721+0000] {gh_etl.py:140} INFO - Loaded 172340 events for 2024-01-14
+[2026-08-15 18:05:20,723] {python.py:240} INFO - Done. Returned value was: 172340
+[2026-08-15T18:05:20.723+0000] {python.py:240} INFO - Done. Returned value was: 172340
+[2026-08-15T18:05:20.751+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2026-08-15T18:05:20.753+0000] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=github_archive_daily, task_id=load_to_duckdb_task, run_id=manual__2024-01-14T00:00:00+00:00, execution_date=20240114T000000, start_date=, end_date=20260815T180520
+[2026-08-15T18:05:20.788+0000] {dag.py:4410} INFO - [DAG TEST] end task task_id=load_to_duckdb_task map_index=-1
+[2026-08-15T18:05:20.837+0000] {dag.py:4396} INFO - [DAG TEST] starting task_id=notify_completion_task map_index=-1
+[2026-08-15T18:05:20.837+0000] {dag.py:4399} INFO - [DAG TEST] running task <TaskInstance: github_archive_daily.notify_completion_task manual__2024-01-14T00:00:00+00:00 [scheduled]>
+[2026-08-15 18:05:20,914] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='airflow' AIRFLOW_CTX_DAG_ID='github_archive_daily' AIRFLOW_CTX_TASK_ID='notify_completion_task' AIRFLOW_CTX_EXECUTION_DATE='2024-01-14T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2024-01-14T00:00:00+00:00'
+[2026-08-15T18:05:20.914+0000] {taskinstance.py:3134} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='airflow' AIRFLOW_CTX_DAG_ID='github_archive_daily' AIRFLOW_CTX_TASK_ID='notify_completion_task' AIRFLOW_CTX_EXECUTION_DATE='2024-01-14T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2024-01-14T00:00:00+00:00'
+[2026-08-15T18:05:20.917+0000] {taskinstance.py:732} INFO - ::endgroup::
+Per day: {'ds': '2024-01-14', 'rows': 172340, 'event_types': 5}
+[2026-08-15 18:05:21,007] {python.py:240} INFO - Done. Returned value was: {'ds': '2024-01-14', 'rows': 172340, 'event_types': 5}
+[2026-08-15T18:05:21.007+0000] {python.py:240} INFO - Done. Returned value was: {'ds': '2024-01-14', 'rows': 172340, 'event_types': 5}
+[2026-08-15T18:05:21.039+0000] {taskinstance.py:341} INFO - ::group::Post task execution logs
+[2026-08-15T18:05:21.040+0000] {taskinstance.py:353} INFO - Marking task as SUCCESS. dag_id=github_archive_daily, task_id=notify_completion_task, run_id=manual__2024-01-14T00:00:00+00:00, execution_date=20240114T000000, start_date=, end_date=20260815T180521
+[2026-08-15T18:05:21.077+0000] {dag.py:4410} INFO - [DAG TEST] end task task_id=notify_completion_task map_index=-1
+[2026-08-15T18:05:21.090+0000] {dagrun.py:854} INFO - Marking run <DagRun github_archive_daily @ 2024-01-14 00:00:00+00:00: manual__2024-01-14T00:00:00+00:00, state:running, queued_at: None. externally triggered: False> successful
+[2026-08-15T18:05:21.092+0000] {dagrun.py:905} INFO - DagRun Finished: dag_id=github_archive_daily, execution_date=2024-01-14 00:00:00+00:00, run_id=manual__2024-01-14T00:00:00+00:00, run_start_date=2024-01-14 00:00:00+00:00, run_end_date=2026-08-15 18:05:21.092032+00:00, run_duration=81626721.092032, state=success, external_trigger=False, run_type=manual, data_interval_start=2024-01-12 06:00:00+00:00, data_interval_end=2024-01-13 06:00:00+00:00, dag_hash=None
+[2026-08-15T17:08:00.885+0000] {dagrun.py:905} INFO - DagRun Finished: dag_id=github_archive_daily, execution_date=2024-01-14 00:00:00+00:00, run_id=manual__2024-01-14T00:00:00+00:00, run_start_date=2024-01-14 00:00:00+00:00, run_end_date=2026-08-15 17:08:00.885442+00:00, run_duration=81623280.885442, state=success, external_trigger=False, run_type=manual, data_interval_start=2024-01-12 06:00:00+00:00, data_interval_end=2024-01-13 06:00:00+00:00, dag_hash=None
