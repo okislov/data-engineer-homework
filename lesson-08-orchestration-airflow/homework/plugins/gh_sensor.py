@@ -14,8 +14,12 @@
 """
 
 from __future__ import annotations
-
+from datetime import datetime, timedelta
+import urllib.request
+from airflow.models.dag import DAG
 from airflow.sensors.base import BaseSensorOperator
+from airflow.utils.context import Context
+from airflow.decorators import task
 
 
 class GHArchiveSensor(BaseSensorOperator):
@@ -24,5 +28,23 @@ class GHArchiveSensor(BaseSensorOperator):
         self.hour = hour
 
     def poke(self, context) -> bool:
-        # TODO: HEAD-запит до gharchive за context["ds"] і self.hour; True, якщо 200.
-        raise NotImplementedError("Реалізуйте GHArchiveSensor.poke — див. SPEC.md")
+        ds = context["ds"]
+        
+        url = f"https://data.gharchive.org/{ds}-{self.hour}.json.gz"
+        self.log.info(f"If GitHub Archive: {url}")
+
+        try:
+            # HEAD-request, check only status
+            req = urllib.request.Request(url, method="HEAD")
+            req.add_header("User-Agent", "airflow-sensor/1.0")
+            with urllib.request.urlopen(req, timeout=160) as response:
+                if response.status == 200:
+                    response.read(1)
+                    self.log.info(f"200")
+                    return True
+        except urllib.error.HTTPError as e:
+            self.log.warning(f"Not ready: {e.code}")
+        except Exception as e:
+            self.log.error(f"Error: {e}")
+            
+        return False
