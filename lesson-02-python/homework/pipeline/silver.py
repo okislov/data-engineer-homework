@@ -31,17 +31,18 @@ def build_silver(bronze: pl.DataFrame) -> pl.DataFrame:
         & pl.col("event_id").is_not_null()
         & pl.col("created_at").is_not_null()
     ).unique(subset=["event_id"])
-    output_path = Path(config.SILVER_FILE)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    silver_df.write_parquet(output_path)
+
+    Path(config.SILVER_FILE).parent.mkdir(parents=True, exist_ok=True)
+
+    silver_df.write_parquet(config.SILVER_FILE)
+    
     return silver_df
 
 
 def write_silver_partitioned(silver: pl.DataFrame) -> None:
-    output_dir = Path(config.SILVER_PARTITIONED_DIR)
-    output_dir.mkdir(parents=True, exist_ok=True)
+    Path(config.SILVER_PARTITIONED_DIR).mkdir(parents=True, exist_ok=True)
 
     silver.write_parquet(
-        output_dir,
-        partition_by=["event_type"]
+        config.SILVER_PARTITIONED_DIR,
+        partition_by=["event_type"],
     )
