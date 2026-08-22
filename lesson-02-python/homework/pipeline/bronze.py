@@ -15,8 +15,6 @@ TODO (Завдання 1): реалізуйте build_bronze().
 from __future__ import annotations
 from pathlib import Path
 
-from pathlib import Path
-
 import polars as pl
 
 from . import config
