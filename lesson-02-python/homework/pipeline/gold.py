@@ -53,7 +53,7 @@ def build_activity_per_minute(silver: pl.DataFrame) -> pl.DataFrame:
         .agg(pl.len().cast(pl.Int64).alias("event_count"))
         .sort("minute")
     )
-    
+
     output_path = Path("data/gold/activity_per_minute.parquet")
     output_path.parent.mkdir(parents=True, exist_ok=True)
 

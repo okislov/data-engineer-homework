@@ -5,4 +5,11 @@
 -- =====================================================================
 SELECT
     NULL::VARCHAR AS repo_name
-WHERE false  -- TODO: репо з WatchEvent мінус репо, що мають PushEvent, у stg_events
+  FROM {{ ref('stg_events') }} repo
+WHERE repo.event_type = 'WatchEvent'
+AND NOT EXISTS (
+    SELECT 1 FROM {{ ref('stg_events') }} stg
+    WHERE repo.repo_name = stg.repo_name
+      AND repo.event_type = 'PushEvent'
+)
+--WHERE false  -- TODO: репо з WatchEvent мінус репо, що мають PushEvent, у stg_events

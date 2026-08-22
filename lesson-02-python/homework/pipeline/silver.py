@@ -31,11 +31,9 @@ def build_silver(bronze: pl.DataFrame) -> pl.DataFrame:
         & pl.col("event_id").is_not_null()
         & pl.col("created_at").is_not_null()
     ).unique(subset=["event_id"])
-
     output_path = Path(config.SILVER_FILE)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     silver_df.write_parquet(output_path)
-    
     return silver_df
 
 

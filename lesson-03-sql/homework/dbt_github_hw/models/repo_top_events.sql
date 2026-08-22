@@ -6,6 +6,9 @@
 SELECT
     NULL::VARCHAR AS event_type,
     NULL::VARCHAR AS repo_name,
-    NULL::BIGINT  AS event_count,
-    NULL::BIGINT  AS type_rank
-WHERE false  -- TODO: агрегувати stg_events по (event_type, repo_name), ROW_NUMBER() OVER (...), QUALIFY type_rank <= 5
+    COUNT(*)::BIGINT AS event_count,
+    ROW_NUMBER() OVER (PARTITION BY event_type ORDER BY COUNT(*) DESC, repo_name)::BIGINT AS type_rank
+ FROM {{ ref('stg_events') }}
+GROUP BY event_type, repo_name
+QUALIFY type_rank <= 5
+--WHERE false  -- TODO: агрегувати stg_events по (event_type, repo_name), ROW_NUMBER() OVER (...), QUALIFY type_rank <= 5

@@ -5,7 +5,11 @@
 -- =====================================================================
 SELECT
     NULL::DATE   AS event_date,
-    NULL::BIGINT AS events,
-    NULL::BIGINT AS prev_day_events,
-    NULL::BIGINT AS delta_events
-WHERE false  -- TODO: агрегувати stg_events по event_date, потім LAG для попереднього дня
+    COUNT(event_type)::BIGINT AS events,
+    LAG(COUNT(event_type)) OVER (ORDER BY event_date)::BIGINT AS prev_day_events,
+    COUNT(event_type) - LAG(COUNT(event_type)) OVER (ORDER BY event_date)::BIGINT AS delta_events
+ --   ,COUNT(event_type) - COALESCE(LAG(COUNT(event_type)) OVER (ORDER BY event_date), 0) AS delta_events
+FROM {{ ref('stg_events') }}
+GROUP BY event_date
+--ORDER BY event_date
+--WHERE false  -- TODO: агрегувати stg_events по event_date, потім LAG для попереднього дня
