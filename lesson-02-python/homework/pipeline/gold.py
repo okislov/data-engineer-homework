@@ -32,10 +32,9 @@ def build_repo_activity(silver: pl.DataFrame) -> pl.DataFrame:
         .sort("event_count", descending=True)
     )
 
-    output_path = Path("data/gold/repo_activity.parquet")
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-
-    gold_df.write_parquet(output_path)
+    Path(config.GOLD_REPO_ACTIVITY_).parent.mkdir(parents=True, exist_ok=True)
+    
+    gold_df.write_parquet(config.GOLD_REPO_ACTIVITY)
 
     return gold_df
 
@@ -54,10 +53,9 @@ def build_activity_per_minute(silver: pl.DataFrame) -> pl.DataFrame:
         .sort("minute")
     )
 
-    output_path = Path("data/gold/activity_per_minute.parquet")
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+    Path(config.GOLD_ACTIVITY_PER_MINUTE).parent.mkdir(parents=True, exist_ok=True)
 
-    gold_df.write_parquet(output_path)
+    gold_df.write_parquet(config.GOLD_ACTIVITY_PER_MINUTE)
 
     return gold_df
 
@@ -73,9 +71,8 @@ def build_push_commits_by_repo(silver: pl.DataFrame) -> pl.DataFrame:
         .sort("push_events", descending=True)
     )
 
-    output_path = Path("data/gold/push_commits_by_repo.parquet")
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+    Path(config.GOLD_PUSH_COMMITS).parent.mkdir(parents=True, exist_ok=True)
 
-    gold_df.write_parquet(output_path)
+    gold_df.write_parquet(config.GOLD_PUSH_COMMITS)
 
     return gold_df

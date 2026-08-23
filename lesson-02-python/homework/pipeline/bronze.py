@@ -13,6 +13,7 @@ TODO (Завдання 1): реалізуйте build_bronze().
 """
 
 from __future__ import annotations
+
 from pathlib import Path
 
 import polars as pl
@@ -50,9 +51,8 @@ def build_bronze() -> pl.DataFrame:
 
     df = transformed_df.collect()
 
-    output_path = Path(config.BRONZE_FILE)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+    Path(config.BRONZE_FILE).parent.mkdir(parents=True, exist_ok=True)
 
-    df.write_parquet(output_path)
+    df.write_parquet(config.BRONZE_FILE)
 
     return df
