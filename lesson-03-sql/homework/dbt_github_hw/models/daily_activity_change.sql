@@ -11,4 +11,3 @@ SELECT
  --   ,COUNT(event_type) - COALESCE(LAG(COUNT(event_type)) OVER (ORDER BY event_date), 0) AS delta_events
 FROM {{ ref('stg_events') }}
 GROUP BY event_date
---WHERE false  -- TODO: агрегувати stg_events по event_date, потім LAG для попереднього дня

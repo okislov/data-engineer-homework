@@ -16,4 +16,3 @@ LEFT JOIN {{ ref('event_categories') }} AS ev
 LEFT JOIN {{ ref('calendar') }} AS cl
     ON se.event_date = cl.day
 GROUP BY se.event_date, cl.is_weekend, ev.category
---WHERE false  -- TODO: 3-way join + GROUP BY (event_date, is_weekend, category)

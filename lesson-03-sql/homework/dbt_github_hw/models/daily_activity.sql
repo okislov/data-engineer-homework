@@ -12,4 +12,3 @@ SELECT
         )::BIGINT                                          AS running_events
  FROM {{ ref('stg_events') }}
 GROUP BY event_date
---WHERE false  -- TODO: агрегувати stg_events по event_date, потім running total через window-функцію

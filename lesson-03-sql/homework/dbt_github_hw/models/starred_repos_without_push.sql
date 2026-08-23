@@ -13,4 +13,3 @@ AND NOT EXISTS (
       AND se.event_type = 'PushEvent'
 )
 ORDER BY se.repo_name
---WHERE false  -- TODO: репо з WatchEvent мінус репо, що мають PushEvent, у stg_events

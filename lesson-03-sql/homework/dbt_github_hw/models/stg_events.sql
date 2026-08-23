@@ -18,4 +18,3 @@ FROM ( '{{ var("events_path") }}', hive_partitioning = true)
 WHERE event_type IN ('PushEvent', 'IssuesEvent', 'PullRequestEvent', 'WatchEvent', 'IssueCommentEvent')
   AND actor_login NOT LIKE '%[bot]'
   AND (event_type <> 'PushEvent' AND payload_commit_count <> 0)
---WHERE false  -- TODO: read_parquet(... hive_partitioning=true) + DQ-фільтри

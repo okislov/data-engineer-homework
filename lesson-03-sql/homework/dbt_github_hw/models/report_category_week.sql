@@ -21,4 +21,3 @@ JOIN {{ ref('event_categories') }} cat
     ON e.event_type = cat.event_type
 WHERE c.iso_week = 2
 GROUP BY c.iso_week, cat.category
---WHERE false  -- TODO: оптимізований варіант report_category_week_naive (join по e.event_date = c.day)

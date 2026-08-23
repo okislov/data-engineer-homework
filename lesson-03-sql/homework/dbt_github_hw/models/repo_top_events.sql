@@ -11,4 +11,3 @@ SELECT
  FROM {{ ref('stg_events') }}
 GROUP BY event_type, repo_name
 QUALIFY type_rank <= 5
---WHERE false  -- TODO: агрегувати stg_events по (event_type, repo_name), ROW_NUMBER() OVER (...), QUALIFY type_rank <= 5
