@@ -4,7 +4,7 @@
 -- Контракт колонок нижче; заглушка повертає 0 рядків.
 -- =====================================================================
 SELECT
-    NULL::DATE                                             AS event_date,
+    event_date::DATE                                       AS event_date,
     COUNT(event_type)::BIGINT                              AS events,
     SUM(COUNT(event_type)) OVER (
         ORDER BY event_date
@@ -12,5 +12,4 @@ SELECT
         )::BIGINT                                          AS running_events
  FROM {{ ref('stg_events') }}
 GROUP BY event_date
---ORDER BY event_date
 --WHERE false  -- TODO: агрегувати stg_events по event_date, потім running total через window-функцію
