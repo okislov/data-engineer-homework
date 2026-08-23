@@ -11,14 +11,7 @@
 -- Контракт колонок нижче; заглушка повертає 0 рядків.
 -- =====================================================================
 SELECT
-    c.iso_week::BIGINT           AS iso_week,
-    cat.category::VARCHAR        AS category,
-    COUNT(e.event_type)::BIGINT  AS events
-FROM {{ ref('stg_events') }} e
-JOIN {{ ref('calendar') }} c
-    ON e.event_date = c.day
-JOIN {{ ref('event_categories') }} cat
-    ON e.event_type = cat.event_type
-WHERE c.iso_week = 2
-GROUP BY c.iso_week, cat.category
---WHERE false  -- TODO: оптимізований варіант report_category_week_naive (join по e.event_date = c.day)
+    NULL::BIGINT  AS iso_week,
+    NULL::VARCHAR AS category,
+    NULL::BIGINT  AS events
+WHERE false  -- TODO: оптимізований варіант report_category_week_naive (join по e.event_date = c.day)
