@@ -9,7 +9,7 @@ SELECT
 WHERE se.event_type = 'WatchEvent'
 AND NOT EXISTS (
     SELECT 1 FROM {{ ref('stg_events') }} stg
-    WHERE se.repo_name = stg.repo_name
-      AND se.event_type = 'PushEvent'
+    WHERE stg.repo_name = se.repo_name
+      AND stg.event_type = 'PushEvent'
 )
 ORDER BY se.repo_name

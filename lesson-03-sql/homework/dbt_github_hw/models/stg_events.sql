@@ -14,7 +14,7 @@ SELECT
     payload_commit_count,
     payload_action,
     payload_ref
-FROM ( '{{ var("events_path") }}', hive_partitioning = true)
+FROM read_parquet('{{ var("events_path") }}', hive_partitioning = true)
 WHERE event_type IN ('PushEvent', 'IssuesEvent', 'PullRequestEvent', 'WatchEvent', 'IssueCommentEvent')
   AND actor_login NOT LIKE '%[bot]'
   AND (event_type <> 'PushEvent' AND payload_commit_count <> 0)
