@@ -50,22 +50,22 @@ def github_archive_daily():
         mode="reschedule"
     )
 
-    @task
+    @task(task_id="download_archive")
     def download_archive_task(ds=None):
         file_path = download(ds=ds, landing_dir=LANDING_DIR)
         return file_path
 
-    @task
+    @task(task_id="validate_file")
     def validate_file_task(file_path: str):
         validate(path=file_path)
         return file_path
 
-    @task
+    @task(task_id="load_to_duckdb")
     def load_to_duckdb_task(file_path: str, ds=None):
         rows_loaded = load_to_duckdb(path=file_path, ds=ds, db_path=DB_PATH)
         return rows_loaded
 
-    @task
+    @task(task_id="notify_completion")
     def notify_completion_task(ds=None):
         summary_dict = summarize(ds=ds, db_path=DB_PATH)
         print(f"Per day: {summary_dict}")
