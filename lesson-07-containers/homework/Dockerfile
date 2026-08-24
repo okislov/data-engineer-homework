@@ -14,3 +14,36 @@
 # Скрипт app/gh_ingest.py — ДАНО, не редагуйте його.
 
 # TODO: реалізуйте Dockerfile тут.
+
+# Базовий образ із фіксованим тегом
+FROM python:3.12-slim
+
+# Вимкнення буферизації логів та створення .pyc файлів
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
+# Створюємо non-root користувача
+RUN useradd --create-home --uid 1000 appuser
+
+# Точка монтування кешу під root і віддаємо права користувачу
+RUN mkdir -p /cache && chown -R appuser:appuser /cache
+
+WORKDIR /app
+
+# Залежності окремим шаром
+COPY app/requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Копіюємо код
+COPY app/gh_ingest.py ./
+
+# HEALTHCHECK
+# Якщо скрипт не піднімає HTTP-сервер, можна перевіряти наявність процесу:
+HEALTHCHECK --interval=10s --timeout=5s --start-period=5s --retries=3 \
+  CMD pgrep -f gh_ingest.py || exit 1
+
+# Перемикаємося на non-root користувача перед запуском
+USER appuser
+
+# 5. ENTRYPOINT в exec-form
+ENTRYPOINT ["python", "gh_ingest.py"]
