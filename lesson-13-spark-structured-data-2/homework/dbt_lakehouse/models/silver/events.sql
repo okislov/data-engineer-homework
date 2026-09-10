@@ -8,14 +8,79 @@
 -- incremental (append): у is_incremental()-гілці брати лише рядки з _ingested_at > max(_ingested_at) у {{ this }}.
 
 -- TODO: замініть заглушку на запит згідно зі SPEC.md
+with source_data as (
+    select
+        id as event_id,
+        type as event_type,
+        actor.login as actor_login,
+        repo.name as repo_name,
+        split(repo.name, '/')[0] as repo_owner,
+        to_timestamp(created_at) as created_at,
+        payload,
+        _ingested_at,
+        _source_file,
+        public
+    from {{ source('bronze', 'raw_events') }}
+
+    {% if is_incremental() %}
+    where _ingested_at > (select max(_ingested_at) from {{ this }})
+    {% endif %}
+),
+
+filtered_data as (
+    select
+        event_id,
+        event_type,
+        actor_login,
+        repo_name,
+        repo_owner,
+        created_at,
+        payload,
+        _ingested_at,
+        _source_file
+    from source_data
+    where
+        event_type in (
+            'PushEvent', 
+            'PullRequestEvent', 
+            'IssuesEvent', 
+            'IssueCommentEvent', 
+            'WatchEvent', 
+            'ForkEvent'
+        )
+        and public = true
+        and event_id is not null
+        and repo_name is not null
+        and created_at is not null
+),
+
+deduplicated_data as (
+    select
+        event_id,
+        event_type,
+        actor_login,
+        repo_name,
+        repo_owner,
+        created_at,
+        payload,
+        _ingested_at,
+        _source_file,
+        row_number() over (
+            partition by event_id 
+            order by _ingested_at desc, created_at desc
+        ) as rn
+    from filtered_data
+)
+
 select
-    cast(null as string)    as event_id,
-    cast(null as string)    as event_type,
-    cast(null as string)    as actor_login,
-    cast(null as string)    as repo_name,
-    cast(null as string)    as repo_owner,
-    cast(null as timestamp) as created_at,
-    cast(null as string)    as payload,
-    cast(null as timestamp) as _ingested_at,
-    cast(null as string)    as _source_file
-where false
+    cast(event_id as string) as event_id,
+    cast(event_type as string) as event_type,
+    cast(actor_login as string) as actor_login,
+    cast(repo_name as string) as repo_name,
+    cast(repo_owner as string) as repo_owner,
+    cast(created_at as timestamp) as created_at,
+    cast(payload as string) as payload,
+    cast(_ingested_at as timestamp) as _ingested_at,
+    cast(_source_file as string) as _source_file
+from deduplicated_data
+where rn = 1
