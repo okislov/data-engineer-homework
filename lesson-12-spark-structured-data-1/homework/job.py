@@ -17,7 +17,7 @@ import shutil
 
 from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql import functions as F  # noqa: F401  (знадобиться у ваших функціях)
-from pyspark.sql.types import StructType
+from pyspark.sql.types import StructType, StructField, StringType, BooleanType
 from pyspark.sql.window import Window  # noqa: F401  (для top_repos_per_type)
 
 LANDING_GLOB = "data/landing/*.json.gz"
