@@ -20,7 +20,11 @@ def event_filter(event: dict) -> bool:
       * є публічними (`public` == True; якщо ключа немає — вважайте публічною).
     Усі інші події (інші типи, приватні) → False.
     """
-    raise NotImplementedError("Реалізуйте event_filter")
+    if event.get("type") not in ALLOWED_TYPES:
+        return False
+    if not event.get("public", True):
+        return False
+    return True
 
 
 def flatten_event(event: dict) -> dict:
@@ -41,7 +45,29 @@ def flatten_event(event: dict) -> dict:
     повертайте None, коли джерельна подія їх не містить. Для payload_commit_count
     візьміть довжину списку payload["commits"], якщо він є, інакше None.
     """
-    raise NotImplementedError("Реалізуйте flatten_event")
+    event_type = event.get("type")
+    if event_type not in ALLOWED_TYPES:
+        return None
+
+    payload = event.get("payload", {})
+
+    commits = payload.get("commits")
+    if isinstance(commits, list):
+        payload_commit_count = len(commits)
+    else:
+        payload_commit_count = None
+
+    return {
+        "id": str(event.get("id", "")),
+        "event_type": str(event_type),
+        "created_at": _to_millis(event.get("created_at", "")),
+        "actor_login": str(event.get("actor", {}).get("login", "")),
+        "repo_name": str(event.get("repo", {}).get("name", "")),
+        "public": bool(event.get("public", True)),
+        "payload_action": payload.get("action"),
+        "payload_ref": payload.get("ref"),
+        "payload_commit_count": payload_commit_count
+    }
 
 
 def _to_millis(created_at: str) -> int:
