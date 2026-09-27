@@ -59,7 +59,7 @@ def flatten_event(event: dict) -> dict:
 
     return {
         "id": str(event["id"]),
-        "event_type": str(event_type),
+        "event_type": str(event["type"]),
         "created_at": _to_millis(event["created_at"]),
         "actor_login": str(event["actor"]["login"]),
         "repo_name": str(event["repo"]["name"]),
