@@ -2,6 +2,7 @@
 # Запуск із цієї директорії (homework/):  uv run python consumer.py
 import json
 import os
+import time
 
 from confluent_kafka import Consumer
 from icecream import ic
@@ -86,7 +87,7 @@ def run_consumer() -> dict:
             total += 1
 
             event_data = json.loads(msg.value().decode("utf-8"))
-            update_counts(event_data, by_type, by_repo)
+            update_counts(by_type, by_repo, event_data)
 
     finally:
         consumer.close()

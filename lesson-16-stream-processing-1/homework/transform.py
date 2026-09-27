@@ -58,11 +58,11 @@ def flatten_event(event: dict) -> dict:
         payload_commit_count = None
 
     return {
-        "id": str(event.get("id", "")),
+        "id": str(event["id"]),
         "event_type": str(event_type),
-        "created_at": _to_millis(event.get("created_at", "")),
-        "actor_login": str(event.get("actor", {}).get("login", "")),
-        "repo_name": str(event.get("repo", {}).get("name", "")),
+        "created_at": _to_millis(event["created_at"]),
+        "actor_login": str(event["actor"]["login"]),
+        "repo_name": str(event["repo"]["name"]),
         "public": bool(event.get("public", True)),
         "payload_action": payload.get("action"),
         "payload_ref": payload.get("ref"),

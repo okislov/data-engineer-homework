@@ -72,8 +72,6 @@ def run_producer() -> int:
             continue
         
         flat_event = flatten_event(raw_event)
-        if flat_event is None:
-            continue
         
         repo_name = flat_event["repo_name"]
         key_bytes = repo_name.encode("utf-8")
