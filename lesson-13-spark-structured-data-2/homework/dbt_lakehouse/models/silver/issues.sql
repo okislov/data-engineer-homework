@@ -44,7 +44,7 @@ flattened_events as (
         to_timestamp(parsed_payload.issue.closed_at) as closed_at,
         parsed_payload.issue.comments as comments,
         transform(parsed_payload.issue.labels, x -> x.name) as label_names
-    from parsed_pr_events
+    from parsed_issue_events
 ),
 
 aggregated_metrics as (

@@ -36,7 +36,7 @@ with pre_aggregated_stages as (
         0 as issues_closed,
         0 as stars,
         0 as forks
-    from {{ ref('pr_latest_state') }}
+    from {{ ref('pull_requests') }}
     where opened_at is not null
     group by 1, 2
 
@@ -53,7 +53,7 @@ with pre_aggregated_stages as (
         0 as issues_closed,
         0 as stars,
         0 as forks
-    from {{ ref('pr_latest_state') }}
+    from {{ ref('pull_requests') }}
     where merged_at is not null
     group by 1, 2
 
@@ -70,7 +70,7 @@ with pre_aggregated_stages as (
         0 as issues_closed,
         0 as stars,
         0 as forks
-    from {{ ref('issues_latest_state') }}
+    from {{ ref('issues') }}
     where opened_at is not null
     group by 1, 2
 
@@ -87,7 +87,7 @@ with pre_aggregated_stages as (
         count(*) as issues_closed,
         0 as stars,
         0 as forks
-    from {{ ref('issues_latest_state') }}
+    from {{ ref('issues') }}
     where closed_at is not null
     group by 1, 2
 

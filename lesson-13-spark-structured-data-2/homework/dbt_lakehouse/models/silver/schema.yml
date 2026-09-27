@@ -41,6 +41,9 @@ models:
               values:
                 - open
                 - closed
+      - name: pr_number
+        data_tests:
+          - not_null
 
   - name: issues
     columns:
@@ -50,3 +53,6 @@ models:
               values:
                 - open
                 - closed
+      - name: issue_number
+        data_tests:
+          - not_null

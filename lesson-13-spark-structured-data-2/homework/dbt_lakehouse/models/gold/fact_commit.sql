@@ -15,6 +15,3 @@ select
     cast(is_distinct as boolean) as is_distinct,
     cast(message_length as integer) as message_length
 from {{ ref('commits') }}
-{% if is_incremental() %}
-where pushed_at > (select max(to_timestamp(cast(date_id as string), 'yyyyMMdd')) from {{ this }})
-{% endif %}

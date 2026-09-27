@@ -9,16 +9,16 @@ with all_fact_dates as (
     select cast(pushed_at as date) as fact_date from {{ ref('commits') }}
     where pushed_at is not null
     union all
-    select cast(opened_at as date) as fact_date from {{ ref('pr_latest_state') }}
+    select cast(opened_at as date) as fact_date from {{ ref('pull_requests') }}
     where opened_at is not null
     union all
-    select cast(merged_at as date) as fact_date from {{ ref('pr_latest_state') }}
+    select cast(merged_at as date) as fact_date from {{ ref('pull_requests') }}
     where merged_at is not null
     union all
-    select cast(opened_at as date) as fact_date from {{ ref('issues_latest_state') }}
+    select cast(opened_at as date) as fact_date from {{ ref('issues') }}
     where opened_at is not null
     union all
-    select cast(closed_at as date) as fact_date from {{ ref('issues_latest_state') }}
+    select cast(closed_at as date) as fact_date from {{ ref('issues') }}
     where closed_at is not null
 ),
 calendar_bounds as (
@@ -34,11 +34,11 @@ generated_dates as (
 select
     cast(date_format(date_day, 'yyyyMMdd') as integer) as date_id,
     cast(date_day as date) as date_day,
-    cast(date_format(date_day, 'u') as integer) as day_of_week,
+    cast(extract(dayofweek_iso from date_day) as integer) as day_of_week,
     cast(
-        case when date_format(date_day, 'u') in ('6', '7') then true else false end 
+        case when extract(dayofweek_iso from date_day) in (6, 7) then true else false end 
         as boolean
     ) as is_weekend,
-    cast(date_format(date_day, 'v') as integer) as iso_week,
-    cast(year(date_day) as integer) as year
+    cast(weekofyear(date_day) as integer) as iso_week,
+    cast(extract(isoyear from date_day) as integer) as year
 from generated_dates

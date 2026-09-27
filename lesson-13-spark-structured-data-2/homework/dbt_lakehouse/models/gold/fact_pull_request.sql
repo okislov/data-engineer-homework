@@ -28,4 +28,4 @@ select
     cast(review_comments as integer) as review_comments,
     cast(hours_open as double) as hours_open,
     cast(size(label_names) as integer) as label_count
-from {{ ref('pr_latest_state') }}
+from {{ ref('pull_requests') }}

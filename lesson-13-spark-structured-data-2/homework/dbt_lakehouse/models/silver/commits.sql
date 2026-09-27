@@ -7,72 +7,66 @@
 -- Пастка: `distinct` — reserved word, у DDL-схемі та доступі до поля потрібні backticks.
 
 -- TODO: замініть заглушку на запит згідно зі SPEC.md
-with raw_pushes as (
-    select
-        event_id,
-        repo_name,
-        actor_login as pushed_by,
-        created_at as pushed_at,
-        payload
+with source_events as (
+    select * 
     from {{ ref('events') }}
     where event_type = 'PushEvent'
-
-    {% if is_incremental() %}
-    and created_at > (select max(pushed_at) from {{ this }})
-    {% endif %}
 ),
 
-parsed_pushes as (
+parsed_events as (
     select
         event_id,
+        created_at as pushed_at,
+        actor_login as pushed_by,
         repo_name,
-        pushed_by,
-        pushed_at,
-        from_json(
-            payload,
-            'ref STRING, commits ARRAY<STRUCT<sha: STRING, author: STRUCT<name: STRING, email: STRING>, message: STRING, distinct: BOOLEAN>>'
-        ) as parsed_payload
-    from raw_pushes
+        replace(ref, 'refs/heads/', '') as branch,
+        from_json(payload, '{{ var("push_schema") }}') as parsed_payload
+    from source_events
 ),
 
 exploded_commits as (
     select
-        event_id,
-        repo_name,
-        pushed_by,
-        pushed_at,
-        regexp_replace(parsed_payload.ref, '^refs/heads/', '') as branch,
-        explode(parsed_payload.commits) as commit_data
-    from parsed_pushes
-),
-
-flattened_commits as (
-    select
-        commit_data.sha as commit_sha,
-        repo_name,
-        pushed_by,
-        branch,
-        commit_data.author.name as author_name,
-        commit_data.author.email as author_email,
-        commit_data.message as message,
-        commit_data.distinct as is_distinct,
-        pushed_at,
-        event_id,
-        case when commit_data.message like 'Merge %' then true else false end as is_merge_commit,
-        split(commit_data.message, '\n')[0] as message_subject,
-        length(commit_data.message) as message_length
-    from exploded_commits
+        e.pushed_at,
+        e.pushed_by,
+        e.repo_name,
+        e.branch,
+        e.event_id,
+        c.sha as commit_sha,
+        c.author.name as author_name,
+        c.author.email as author_email,
+        c.message as message,
+        c.`distinct` as is_distinct,
+        case 
+            when c.message like 'Merge %' then true 
+            else false 
+        end as is_merge_commit,
+        split_part(c.message, '\n', 1) as message_subject,
+        length(c.message) as message_length
+    from parsed_events e,
+    explode(e.parsed_payload.commits) as c
 ),
 
 deduplicated_commits as (
     select
-        *,
+        commit_sha,
+        repo_name,
+        pushed_by,
+        branch,
+        author_name,
+        author_email,
+        message,
+        is_distinct,
+        pushed_at,
+        is_merge_commit,
+        message_subject,
+        message_length,
         row_number() over (
-            partition by commit_sha
+            partition by commit_sha 
             order by pushed_at asc, event_id asc
         ) as rn
-    from flattened_commits
+    from exploded_commits
 )
+
 select
     cast(commit_sha as string) as commit_sha,
     cast(repo_name as string) as repo_name,
