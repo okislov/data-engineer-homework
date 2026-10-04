@@ -19,7 +19,6 @@ parsed_events as (
         created_at as pushed_at,
         actor_login as pushed_by,
         repo_name,
-        replace(ref, 'refs/heads/', '') as branch,
         from_json(payload, '{{ var("push_schema") }}') as parsed_payload
     from source_events
 ),
@@ -29,7 +28,7 @@ exploded_commits as (
         e.pushed_at,
         e.pushed_by,
         e.repo_name,
-        e.branch,
+        regexp_replace(e.parsed_payload.ref, '^refs/heads/', '') as branch,
         e.event_id,
         c.sha as commit_sha,
         c.author.name as author_name,

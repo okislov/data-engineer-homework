@@ -40,5 +40,5 @@ select
         as boolean
     ) as is_weekend,
     cast(weekofyear(date_day) as integer) as iso_week,
-    cast(extract(isoyear from date_day) as integer) as year
+    cast(year(date_day) as integer) as year
 from generated_dates
