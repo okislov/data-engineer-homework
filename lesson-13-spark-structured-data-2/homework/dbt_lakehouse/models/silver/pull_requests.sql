@@ -21,10 +21,7 @@ parsed_pr_events as (
         event_id,
         repo_name,
         event_at,
-        from_json(
-            payload,
-            'action STRING, number INT, pull_request STRUCT<title: STRING, user: STRUCT<login: STRING>, state: STRING, merged: BOOLEAN, draft: BOOLEAN, created_at: STRING, closed_at: STRING, merged_at: STRING, additions: INT, deletions: INT, changed_files: INT, commits: INT, comments: INT, review_comments: INT, author_association: STRING, labels: ARRAY<STRUCT<name: STRING>>>>'
-        ) as parsed_payload
+        from_json(payload, '{{ var("pr_schema") }}') as parsed_payload
     from raw_pr_events
 ),
 

@@ -41,8 +41,8 @@ exploded_commits as (
         end as is_merge_commit,
         split_part(c.message, '\n', 1) as message_subject,
         length(c.message) as message_length
-    from parsed_events e,
-    explode(e.parsed_payload.commits) as c
+    from parsed_events e
+    LATERAL VIEW EXPLODE(e.parsed_payload.commits) t AS c
 ),
 
 deduplicated_commits as (
